@@ -1,0 +1,62 @@
+{
+  "cases": [
+    {
+      "case_id": "P01",
+      "query": "我在一月开始时描述过怎样的体重变化？",
+      "as_of_sequence": 10,
+      "example_output": {
+        "status": "ok",
+        "as_of_sequence": 10,
+        "memories": [
+          {
+            "memory_id": "example-P01",
+            "subject": "self",
+            "text": "本人报告近两个月体重下降约5公斤；不能据此确定当前体重。",
+            "source_ids": [
+              "s006-u01"
+            ],
+            "evidence": [
+              {
+                "message_id": "s006-u01",
+                "quote": "这两个月体重不知道为啥掉了大概5公斤"
+              }
+            ]
+          }
+        ],
+        "usage": {
+          "history_input_chars": 0
+        }
+      },
+      "note": "这是允许输出之一；memory_id由实现稳定生成。usage中的0仅适用于本次查询没有模型调用，不是统一固定值。"
+    },
+    {
+      "case_id": "P02",
+      "query": "截至第6段会话，我是否已经报告近期实测血糖？",
+      "as_of_sequence": 6,
+      "example_output": {
+        "status": "ok",
+        "as_of_sequence": 6,
+        "memories": [
+          {
+            "memory_id": "example-P02",
+            "subject": "self",
+            "text": "本人说近期没有测血糖，因此不知道当时具体数值；后续测量计划不是已完成检查。",
+            "source_ids": [
+              "s006-u02"
+            ],
+            "evidence": [
+              {
+                "message_id": "s006-u02",
+                "quote": "血糖我最近没测过，所以不太清楚现在的情况。"
+              }
+            ]
+          }
+        ],
+        "usage": {
+          "history_input_chars": 0
+        }
+      },
+      "note": "这是允许输出之一；memory_id由实现稳定生成。usage中的0仅适用于本次查询没有模型调用，不是统一固定值。"
+    }
+  ]
+}
