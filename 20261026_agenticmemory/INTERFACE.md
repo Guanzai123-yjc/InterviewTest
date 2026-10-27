@@ -1,10 +1,10 @@
-# 验收接口 v2
+# 验收接口 v3
 
 这里只约定可执行接口和交付格式，不限定内部实现。stdout输出一个JSON值，日志写stderr；正常退出码0，非法参数、解析/模型调用等失败退出非0，返回 `{"status":"error","error":{"message":"具体原因"}}`。失败原因能确认来自外部服务时可标记 `error.category="external_service"`，保留真实依据。
 
 ## 输入与构建
 
-JSONL每行会话：`user_id`、`session_id`、正整数`sequence`、`recorded_at`及`messages`；每条消息含`message_id`、`role`、`content`。原文和稳定ID供证据核验。
+JSONL每行会话：`user_id`、`session_id`、正整数`sequence`、`recorded_at`及`messages`；每条消息含`message_id`、`role`、`content`。sequence仅表示数据接收顺序，原文和稳定ID供证据核验。
 
 `ingest --input PATH --store PATH` 输出：
 
@@ -16,12 +16,13 @@ JSONL每行会话：`user_id`、`session_id`、正整数`sequence`、`recorded_a
 
 ## 查询及回答
 
-`query --store PATH --query TEXT --as-of-sequence N --top-k K`：N为已导入范围内正整数，K为1至8；空白问题非法。示意如下，方括号中的文字是占位内容，**不是样例答案**：
+`query --store PATH --query TEXT`：接受自然语言问题，依据该存储已经导入的数据回答。空白问题非法。公开题在两批数据全部导入后运行。历史问题通过问题本身的时间描述表达。
+
+示意如下，方括号中的文字是占位内容，**不是样例答案**：
 
 ```json
 {
   "status":"ok",
-  "as_of_sequence":10,
   "answer":"[对问题的具体回答；信息不足时说明已知事实与缺口]",
   "memories":[{
     "memory_id":"[稳定ID]",
@@ -31,23 +32,22 @@ JSONL每行会话：`user_id`、`session_id`、正整数`sequence`、`recorded_a
     "evidence":[{"message_id":"[原始消息ID]","quote":"[对应消息的连续原文片段]"}]
   }],
   "timings":{"retrieval_ms":0.0},
-  "usage":{"history_input_chars":0},
   "trace":{"summary":"[可选：检索步骤、筛选依据或失败位置的简要说明]"}
 }
 ```
 
-`status` 为 `ok`、`insufficient` 或 `error`。正常查询无论ok还是insufficient都要给非空answer。主体标签自由但含义明确。引用必须存在且不晚于观察点，quote必须是连续原文。信息不足可以返回有用的边界证据；真正无关问题可返回空memories并说明没有相关记录。所有答案与记忆都不得泄漏观察点之后的信息。
+`status` 为 `ok`、`insufficient` 或 `error`。正常查询无论ok还是insufficient都要给非空answer。主体标签自由但含义明确。引用必须来自已导入数据，quote必须是对应消息中的连续原文。信息不足可以返回有用的边界证据；真正无关问题可返回空memories并说明没有相关记录。
 
-记忆text与所有quote累计≤2,400 Unicode字符、最多K条；answer单独≤1,200字符。模型查询历史输入累计≤6,000字符（包括摘要、召回文本、重排输入，重复重复计数）。`usage.history_input_chars` 可省略并由源码/日志核验；无模型调用为0，未知不能伪报0。
+本题不限定召回条数、记忆及引文长度、回答长度或查询历史上下文字符数。召回内容是否相关、是否遗漏必要事实仍按实际语义评价。`usage.history_input_chars`可选，用于描述本次查询的历史输入字符量，不设置上限，也不参与评分。
 
 `timings.retrieval_ms` 为实际检索阶段的累计毫秒数：包含查询向量化、候选检索、过滤、重排及证据读取，结束于最终回答生成前；多次检索相加，使用单调时钟。无检索工作可为0，未测量用null并解释，不能编造数字。评测器还独立测量整次CLI耗时，含进程启动、加载、检索和回答生成；两者不等价。缺少自报计时会标记不完整，不能据此声称“检索0ms”。
 
 ## answers.jsonl 与 HTML
 
-每道公开题恰好一行，题号、问题文本、观察点必须与 `questions.jsonl` 一致，result是该次query完整返回值：
+每道公开题恰好一行，题号、问题文本必须与 `questions.jsonl` 一致，result是两批数据全部导入后该次query的完整真实返回值：
 
 ```json
-{"question_id":"[题号]","question":"[原问题]","as_of_sequence":10,"result":{"status":"insufficient","as_of_sequence":10,"answer":"[本次真实回答]","memories":[],"timings":{"retrieval_ms":null}}}
+{"question_id":"[题号]","question":"[原问题]","result":{"status":"insufficient","answer":"[本次真实回答]","memories":[],"timings":{"retrieval_ms":null}}}
 ```
 
 不得用示意占位内容提交。失败也保留真实error并在复盘解释，不把失败伪装成成功。HTML应展示同一批结果，以及构建产物；为自动核对，嵌入两个JSON脚本块：

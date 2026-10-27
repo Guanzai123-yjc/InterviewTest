@@ -1,6 +1,6 @@
-{"question_id": "Q001", "question": "用户既往提到的慢性代谢性疾病是什么？", "as_of_sequence": 10}
-{"question_id": "Q003", "question": "用户第一次血糖评估时，糖化血红蛋白的结果是多少？", "as_of_sequence": 10}
-{"question_id": "Q005", "question": "用户的间歇性视力模糊最初出现于什么时间？记录能确定具体年月日吗？", "as_of_sequence": 10}
-{"question_id": "Q010", "question": "用户询问是否需要加大降糖药剂量时，已知用药方案和仍缺少的测量信息是什么？记录足以确定该加量吗？", "as_of_sequence": 10}
-{"question_id": "Q011", "question": "关于用户头痛时的用药顾虑，既往发生过什么、有哪些明确的用药限制？", "as_of_sequence": 13}
-{"question_id": "Q014", "question": "项目冲刺中提前下班那次疲劳，用户当时实际测到了多少血糖？以前提过的数值能当作那一次的实测结果吗？", "as_of_sequence": 12}
+{"question_id": "Q001", "question": "用户既往提到的慢性代谢性疾病是什么？"}
+{"question_id": "Q003", "question": "用户第一次血糖评估时，糖化血红蛋白的结果是多少？"}
+{"question_id": "Q005", "question": "用户的间歇性视力模糊最初出现于什么时间？记录能确定具体年月日吗？"}
+{"question_id": "Q010", "question": "最初讨论二甲双胍1500mg/天联合DPP-4方案后，用户因饭后不适询问是否需要加大药量。那次讨论中已知方案、缺少的测量信息是什么？能确定当时该加量吗？"}
+{"question_id": "Q011", "question": "关于用户头痛时的用药顾虑，既往发生过什么、有哪些明确的用药限制？"}
+{"question_id": "Q014", "question": "项目冲刺中提前下班那次疲劳，用户当时实际测到了多少血糖？以前提过的数值能当作那一次的实测结果吗？"}
