@@ -1,0 +1,6 @@
+# Local credentials; distribute separately from the public repository.
+.env
+.env.*
+!.env.example
+key.md
+candidate-private*.zip
