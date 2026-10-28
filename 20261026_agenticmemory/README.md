@@ -10,6 +10,8 @@
 - `data/incremental.jsonl`：后续6段完整会话，88条消息。
 - `questions.jsonl`：6道公开问题，只有题号和问题，没有答案或回答要点。
 - `INTERFACE.md`：用于自动验收的输入输出格式。
+- `MODEL_API.md`：面试方提供的模型接口、请求/返回示例及用量统计说明。
+- `.env.example`：模型配置模板；私密发放包另含已填写 AK 的 `.env`。
 
 每行JSONL为一个完整会话。`sequence` 是接收顺序。`recorded_at=null` 表示没有可靠会话日期，正文事件时间不能自动当成记录时间。账号ID不等于正文中所有人的主体。
 
